@@ -1,4 +1,6 @@
-const { server } = require('../app')
+const express = require('express')
+const app = express()
+const server = require('http').createServer(app)
 
 const io = require('socket.io')(server, {
   cors: {
@@ -12,7 +14,7 @@ io.on('connection', (socket) => {
   socket.emit('me', socket.id)
 
   socket.on('disconnect', () => {
-    socket.broadcast.emit('Connection finished')
+    socket.broadcast.emit('callended')
   })
 
   socket.on('calluser', ({ userToCall, signalData, from, name }) => {
@@ -27,5 +29,3 @@ io.on('connection', (socket) => {
     io.to(data.to).emit('callaccepted', data.signal)
   })
 })
-
-module.exports = io
